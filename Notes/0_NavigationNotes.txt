@@ -1,0 +1,605 @@
+Now to navigate fro one page to another we need to learn the Hook useNavigate()
+On the click of the quick search breakfats option we are going to make the  routing
+to 2nd page.
+
+section key={index} onClick={getSecondPg} className="px-0 d-flex border border-1 searchSize m-3 ">
+    <img src={"./images/"+value.image} alt="idliImg" className=" imgSize  " />
+    <div className="pt-3 px-2  ">
+        <h4 className="NavyBlue text2">{value.name}</h4>
+        <p className="text-muted small">{value.content}</p>
+    </div>
+</section>
+
+onClick of this entire block we want to navigate to the next page.
+
+useNavigate() is a hook available inside react router dom.
+And we use useNavigate() when we want to make navigation from one page to another 
+page.
+And we also use useNavigate() when we want single page navigation approach is 
+followed.
+
+Use of useNavigate() --->
+1)Import =>
+import {useNavigate} from 'react-router-dom';
+
+2)Create instance =>
+let navigate = useNavigate()
+
+3)Use the instance for navigation in the function of onclick =>
+let getSecondPg =  ()=>{
+    navigate()
+}   
+
+4)Inside the navigate() function use the url which u used in App.js for 2nd page =>
+App.js --> 
+<>
+   <Routes>
+     <Route path="/" element={<HomePage/>} />
+     <Route path="/search-page" element={<SearchPage/>} />
+   </Routes>
+</>
+
+So,
+let getSecondPg =  ()=>{
+    navigate("/search-page)
+}   
+
+And done!
+
+But for every quick meal we want 2nd page with it's params 
+Will pass id over here...
+
+
+()=> getSecondPg(value.meal_type)
+arrow functions can be with or without brackets.
+so,
+ <section key={index} onClick={ ()=> getSecondPg(value.meal_type)} className="px-0 d-flex border border-1 searchSize m-3 ">
+
+Ans so,
+ let getSecondPg =  (Id)=>{
+        // navigate("/search-page")
+        navigate(`/search-page/${Id}`)
+    }   
+
+Since Now on whichever quick search meal we click breakfast or snak accordingly the 
+2nd page url will have params.
+
+Now will come to filter page section.:-
+
+Hook =  useParams();
+We use useParams() to get dynamic url data.
+Also in react like class keywor for is also reserved so change that as well
+from for to htmlFor. 
+useParams() is use to get url parameters
+
+let { locID, mealID, cuisineID, sortPrice, highCost, lowCost } = request.body;
+
+
+let { locID, mealID, cuisineID, sortPrice, highCost, lowCost } = request.body
+from this mealId is cumpulsary baki saba optional hai.
+
+joo post method hamne use kee thi and postman ke body section mealId
+data enter kiya thaa that will be passing as shown above in react:-
+let filter = {
+                mealId: meal_Id
+            }
+
+projection:-
+We did one change in server side :   let result1 = await RestaurantModel_File.find(filter,{name:1,city:1,locality:1,min_price:1,cuisine:1}).sort(..restCode...)
+Aaab database mai kitni sari cheeze hai sarii too nahi lagegi soo
+joo joo key-value pair lagne vali hai voo value haam ismai likhenge :- 
+{name:1,city:1,locality:1,min_price:1,cuisine:1}
+
+1 =  value find mai se find hogi 
+0 =  value find mai se find nahi hogi
+
+aab joo joo data mentioned hai i.e 1 hai vohi data dikhega.
+
+So when we want to extract things which we want from the database we do this above way 
+called projection.
+agaar cuisine:0 hota tooo cuisine nahi dikhta or nahi find hota.
+Now to us in react only these database are available for filter vala api only i.e getFilterData
+kyuki getFilterData api mai changes kiye hai.
+
+For a perticular api if some values are not imp from the database we can 
+use projection.
+
+
+In filter section we have :-
+    1)Select locations
+    2)Cuisine
+    3)Cost For Two
+    4)Sort
+
+1)Select locations:- for this will need the location api joo already hamne Create
+kiya tha soo vahi copy paste karenge
+
+Now what we want is joo location filter section mai select kare that location will
+appear on the  R.H.S section.
+so will have a makeFilteration() function for it.
+
+
+
+4)Sort:-
+In sort the logic which we want to implement is that when we click
+on price low to high or price high to low it must work accordingly with 
+the restaurants shown on R.H.S of the pg. 
+name="sort" --> will give this to both the radio buttons so that we can select
+one radio button at a time.
+
+to 1st input we gave value attribute as value="1" and to 1st input we gave 
+value attribute as value="-1" .
+As ,
+sort =  1 --> low to high .
+sort = -1 --> high to low .
+this is the common behaviour which comes under the sort.
+
+And now for further logic will use onChange and then bellow code from switch case:-
+case "sortPrice": //sort logic of filter section:-
+                filter['sortPrice'] = value;
+                break;
+But becaz of the switch case at a time only one case is happening so,
+to handle this case will make filter accessable globally.
+
+
+already selected price sort section ke uske hisab se fixed rahega becaz of bellow code:-
+
+if (value > 0){
+                    _filter['locID'] = value;
+                }else{
+                    delete _filter['locID'];//delete keyword
+                }
+
+23:26 see haam dekh sakte hai revision ke liye  36th video mai
+
+We made restaurant 3rd page and niche ka onclick about restaurant and contact ka kiya
+also header was repeativly used in 3rd page also so hame header vale code ko bahar nikala and 
+jaha jaha lagta hai vaha use kiya.
+
+Now ,
+fetch api = fetch api are js build-in api used for communication
+            use to send request from client side.
+rest api = apis which we develop at server side are rest apis   
+           commonly used to communicate with server.
+
+Navigation of 3rd page from SearchPageResultSection page:-
+onClick={()=> navigatePg("/restaurant-page")}
+page above code se navigate hoo jayega but hame api mai id chahiye sooo,
+onClick={()=> navigatePg("/restaurant-page/"+value._id)}
+
+and in App.js :-
+from:-
+<Route path="/restaurant-page" element={<RestaurantPage/>} />
+to this:-
+<Route path="/restaurant-page/:restId" element={<RestaurantPage/>} />
+
+Now we have id and so we can grab entire details of the page.
+
+Now to get the entrie information of the perticular restaurant (passed through
+the navigation id ) we need an api to fetch the data from the database
+for showing restaurant details of the perticular restaurant.
+i.e this vala api which we craeted in nodejs:- 
+/restaurant_api-by-restaid/:restaid
+
+
+
+Now will integrate payment gateway:-
+we have different types of payment gateway:-
+    cc avenew
+    paytm 
+    Raser Pay
+
+Will use Raser Pay for payment gateway:-
+Make sure that Test mode is only selected and not live mode.
+
+razor pay :- https://dashboard.razorpay.com/app/account-settings
+
+Step 1) Go to option -> 'Accounts and Settings'
+
+Step 2) Select 'API Key' , this api key is  only imp .
+
+Step 3) IF API key is already created select recreate option and deactivate the 
+old key and generate the new one.
+
+the new key and secreat key will be generated and downlaod it becaz voho bohot imp hai
+as we can further see only api key and not the secret key so downlaod it.
+(I have downlaod it in notes folder =  rzp.csv)
+
+Step 4)Now to integrate razor pay with nodejs we need to install Node.js SDK
+so :- https://razorpay.com/docs/payments/server-integration/nodejs/payment-gateway/
+
+Step 5)Under Build Integration we can see the integration code
+
+Step 6) Will create frontend part of the payment first ,which is
+already available under build integration section 
+copy the code and.
+
+In ThirdPage.js file :-
+create function :- 
+let displayRazorPay = ()=>{}
+
+paste the copied code from https://razorpay.com/docs/payments/server-integration/nodejs/payment-gateway/build-integration/
+where in this link u have frontend code under :- Code to Add Pay Button
+Copy the code and paste it inside the function displayRazorPay.
+    remove start and end script tag
+    remove the button from the first line
+
+Now we also created one loadscript function but why we craeted loadscript function ?
+thta's becaz we need to load the script file :-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+available in the displayRazorPay code .
+We need to laod script file becaz it's not possible for us to downlaod script 
+file in our code becaz vaisebhi voo script file ka code haesha update hote reheta hai.
+So loadscript function created by us will help to inject the src file in our code
+runtime .
+so we need to download sdk runtime whenever we run and so script file har bar downlaod
+nahi kaar sakte so we have written loadscript code.
+
+we can also copy the script and paste it in index.html file but that's not a good
+practise as  if we don't want to make payment why to paste it unnecessarily
+
+  let loadScript = ()=>{
+        return new Promise(
+            (resolve,reject)=>{
+                const script =  document.createElement('script');
+                script.src =  src
+                script.onload = ()=>{
+                    resolve(true);
+                }
+                script.error = ()=>{
+                    resolve(false);
+                }
+                document.body.appendChild(script);
+            }
+        )
+    }
+
+will convert it into async await:-
+    let loadScript = async () => {
+
+        const script = document.createElement('script');
+        script.src = src
+        script.onload = () => {
+            return true;
+        }
+        script.error = () => {
+            return false;
+        }
+        document.body.appendChild(script);
+    }
+
+
+Paste this src link in loadScript func:- <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+So , 
+    let loadScript = async () => {
+
+        const script = document.createElement('script');
+        script.src = "https://checkout.razorpay.com/v1/checkout.js"
+        script.onload = () => {
+            return true;
+        }
+        script.error = () => {
+            return false;
+        }
+        window.document.body.appendChild(script);
+    }
+
+Now call loadscript inside displayRazorPay function and becaz loadscript is 
+promise so make displayRazorPay as async await .
+also do this onclick :- <button className="btn btn-success" onClick={displayRazorPay} >Pay Now</button>
+
+Run the code and script is loaded alert will be shown.
+
+Final code :-
+let loadScript = async () => {
+
+        const script = document.createElement('script');
+        script.src = "https://checkout.razorpay.com/v1/checkout.js"
+        script.onload = () => {
+            return true;
+        }
+        script.error = () => {
+            return false;
+        }
+        window.document.body.appendChild(script);
+    }
+
+    let displayRazorPay = async () => {
+        let Is_loadscript_Loaded = await loadScript();
+
+        if (Is_loadscript_Loaded === false) {
+            alert("sdk is not loaded")
+
+        } else {
+            alert("sdk is loaded");
+            var options = {
+                "key": "rzp_test_H7D3UtNdUhJaxp", // Enter the Key ID generated from the Dashboard
+                "amount": 500 * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                "currency": "INR",//indian currency
+                "name": "Zomato Cone Payment",
+                "description": "Buying product from zomato clone",
+                "image": "https://example.com/your_logo",
+                "order_id": "order_IluGWxBm9U8zJ8", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                "handler": function (response) { //these 3 things we are going to submit to the server
+                    alert(response.razorpay_payment_id);
+                    alert(response.razorpay_order_id);
+                    alert(response.razorpay_signature)
+                },
+                "prefill": {
+                    "name": "Gaurav Kumar",
+                    "email": "gaurav.kumar@example.com",
+                    "contact": "9000090000"
+                }
+              
+            };
+            var razorPayObject = window.Razorpay(options);
+            razorPayObject.open();
+            
+        }
+    }
+
+
+
+Now will do server side code for razor pay...:-
+for steps refer =  https://razorpay.com/docs/payments/server-integration/nodejs/payment-gateway/build-integration/
+Instatall sdk :-
+
+For every payment amount user enters and order id will be different only logic 
+will be same.
+OrderId and paymentId combination genertes signature at server side.
+OererId and PaymentId => generates signature at server side.
+
+Also we get signature as a payment details and 
+our signature and generated signature at server side should match.
+If both signature matches then payment has worked successfully.
+
+so to generate orderid and paymentid server side signature an algorithm is applied.
+i.e :-
+generated_signature = hmac_sha256(order_id + "|" + razorpay_payment_id, secret);
+
+  if (generated_signature == razorpay_signature) {
+    payment is successful
+  }
+
+(ye code https://razorpay.com/docs/payments/server-integration/nodejs/payment-gateway/build-integration/
+see liya hai scroll down and see in this site.)
+
+as explained that to generate orderid and paymentid server side signature an algorithm 
+is applied. that is what we can see in the above code that generated_signature should
+be equal to razorpay_signature.
+
+
+Login using google in page header component file:-
+we need to use packages  for google login process .
+    1)google sign-in package . 
+    2) and a react package called react-ouath/googleso in npm website we get 
+    the command copy and paste it in termina and install.
+    website:- https://www.npmjs.com/package/@react-oauth/google
+    command :- npm i @react-oauth/google.
+
+There are so manny signin available we will use one-tap sign0up
+and how to use it that is also given on website.
+there under how to use it :-
+1)Get your Google API client ID:-
+and to get 'google api client id' we get it from  google developer 
+console website
+like for facebook there's facebook developer website simillarly for google we 
+have it.
+
+https://console.cloud.google.com/cloud-resource-manager?pli=1
+
+1)go to craete project 
+2)edit project name
+3)press on create
+4)select the project
+5)select oauth consent screen
+6)when we select oauth then we have 2 options usertype
+internal means only specified email can login
+external means all everyone can login.
+7)so click on ecternal and create.
+8)fill the information which is necessary
+9)press on save and continue .
+10)and then back tp dashboard
+11)publishing status will be testing and we need to keep it on
+testing mode only becaz we are not going to publish it for the final 
+application.
+
+12)Now under api and services -> credentials option -> creae credentials -> 
+oauth client id -> application type = web application , enter name , add url as
+http://localhost
+http://localhost:3000
+add these 2 urls in Authorized JavaScript origins
+13)Then click on create.
+14)Download the json file.
+15)Now will see that our client id is available .
+
+so we have created the client id
+rest things are simple we just need to copy the code mentioned.
+
+unles sand untill user is logedin we don't want to permit the user
+for payment and this is very very important.
+
+we have used params in headers so that code repetation na hoo. and only one 
+file can server header to all pages with different baground color.
+
+then we came back to login , now login ke liye login par click karne paar hame ek
+pop up chahiye which can be done using modals
+
+
+Since now https://www.npmjs.com/package/@react-oauth/google , on this site
+we under how to use section , 1st step is done i.e Get your Google API client ID
+now 2nd step i.e Configure your OAuth Consent Screen that is also done 
+so 3rd step Wrap your application with GoogleOAuthProvider
+as given over the website:-
+3rd step:-
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
+<GoogleOAuthProvider clientId="<your_client_id>">...</GoogleOAuthProvider>;
+
+so insert these lines in ur code.
+import the 1st line.
+and 2nd lines means that ... will have our entire code i.ecternal
+our entire code is wraped inside GoogleOAuthProvider so..
+<GoogleOAuthProvider clientId="<your_client_id>">
+        ......code.....
+        ......code.....
+        ......code.....
+</GoogleOAuthProvider>;
+
+here clientId="<your_client_id>" will ahve our client id  which we craeted in 1st step.
+copy the client id from :- https://console.cloud.google.com/apis/credentials?project=zomatocloneproject
+and paste it instead of <your_client_id>
+
+Now 4th step  Sign In With Google
+import { GoogleLogin } from '@react-oauth/google';
+
+<GoogleLogin
+  onSuccess={credentialResponse => {
+    console.log(credentialResponse);
+  }}
+  onError={() => {
+    console.log('Login Failed');
+  }}
+/>;
+
+so import statemnt past kardo and paste the google login code in model body
+
+console.log(credentialResponse.credential) -->this will give us token and we need to 
+                                              read this token , but how?
+
+For this token to read we need jwt decode token :- https://www.npmjs.com/package/jwt-decode
+we use this to decode the token.
+
+how to use this backage to decode the token?
+it's explained properly in :- https://www.npmjs.com/package/jwt-decode
+use:-
+    import jwt_decode from "jwt-decode";
+    
+    var token = "eyJ0eXAiO.../// jwt token";
+    var decoded = jwt_decode(token);
+    
+    console.log(decoded);
+
+so import it and use jwt_decode() function to decode the token.
+console.log(decodedToken) -->now we have access to email name sername and all 
+logedin user related things.
+
+we will need this information i.e name sername and all which we have decoded at the
+time of payment so will save it in browser.
+
+inside browser we can store data in cookies , localstorage 
+where cookies can store lightweigt data , but token is a big data 
+and to store such big major data in browser we use local storage 
+so to save data will use localStoarge.
+So , localStorage.setItem("token_key",token)
+
+
+to make alert look nice and good we use sweet alert:-
+to install sweete alert using react we do it from website:-
+https://sweetalert2.github.io/#download
+
+and to use sweet alert we need to install the package.
+further when we want to use the package just use it my importing
+and then we can use it normally.
+
+
+Deployment:-
+We can upload this project on online platform so that we can acess the site , 
+called Deployment.
+
+We are going to make Deployment on heroku.
+Heroku is a cloud based platform , where we can just upload our project
+
+now while signup just remember to select role as student rest all jo hai voo bharo
+info joo bhari:-
+
+First name *
+Shamika
+
+Last name *
+Chalse
+
+Email address *
+shamika15chalse@gmail.com
+
+Company name
+none
+
+Role *
+Student
+
+Country/Region *
+India
+
+Primary development language *
+Select a language
+
+On heroku we can upload max to max 5 application online
+Like react application and backend application yahape hee 2 hoo gaye.
+There are 3 ways of doing it i.e 3 ways of Deployming method on heroku:-
+1)Heroku Git
+2)GitHub
+3)Container Registry
+we are going to upload our project and then we are going to 
+Deploy it so will use 2nd option i.e GitHub.
+
+In GitHub :-
+create a repository:-
+enter repository name
+remember to make it public and not private.
+And after just doing this 2 things click on craete repository.
+
+then sare command dekhake project upload karoo.
+now we have our git hub repository
+(never uplaod node module folder on github heroku will build on his own)
+
+getting back to heroku , we clicked on GitHub option for Deployment on heroku
+as soon as we click a search  bar appears , search for our created github 
+repository by using name which we entered by creating repository.
+after search press on connect.
+
+After connecting we have different options form where to make Deployment i.e 
+brach choose karneko puchega.
+And will "enable automatic deployment" , enable automatic deployment means that
+whenever will make changes  on or local Pc and updated it on gitHub ,
+then as soon as changes are updated on github then it will automaticly
+detect it and make the updations on the deployed or hosted sites as well.
+this is called automatic deployment so enable it.
+1st time it won't be automatic we need to deploy it manually using deploy branch option down there
+but after that it will be automatic.
+
+Before deployment we need to make one more change under settings , there's a buildpackage
+and our project is not a build project it's a development project.
+build project means ready for user and to make our project build project
+
+go on the site = https://elements.heroku.com/buildpacks/mars/create-react-app-buildpack
+on this site click on "view on gitHub". 
+then github view hoga and  copy the url and paste it on heroku where add buildpack is 
+written click that button and paste the url and save the changes.
+
+And now go the Deploy option on heroku site click on deploy branch and deployinng process
+will start. and while deploying we can see  all nodejs version packages will be  
+directly installed  by heruku
+and once the process is done will see Build successfully
+If error occuredit will mention the Lines solve it
+
+
+SAD REALITY HERUKU DOES NOT HAVE SUPPORT ON BUILDPACK , SO WILL TRY TO DEPLOY IT ON NETLIFY
+
+
+Now what will do us react mai joo joo axios kee anadar urls the will replace 
+http://localhost:2000 --> only this much part of url will get replaced with heruku 
+url , do it for every page wherever u find url of axios
+then use update command shown in  mentorship video no. 36 , time = 15:51
+to update in git and so in heruku
+
+Once u upload the project on netlify just copy the url of netlify and paste it 
+on google cloud select project then in credentials click on edit and add our netlify
+url and save
+
+
+we will make frontend i.e react application Deployment on netlify 
+and on heroku will deploy backend application , so that will get understanding of 
+both the platforms . 
+becaz heroku scrips are changed so kuch uplaod nahi hooo sakta free mai.
+
