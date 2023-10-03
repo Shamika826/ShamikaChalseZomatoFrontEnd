@@ -21,7 +21,7 @@ function SearchPageResultSec() {
     let [restList, setRestList] = useState([]);
 
     let filterOperations = async (filter) => {
-        let URL = "http://localhost:2000/restaurant_filterData"
+        let URL = "https://shamikachalse-zomatobackend.onrender.com/restaurant_filterData"
         // let filter = {
         //     mealID: meal_Id
         // }
@@ -43,7 +43,7 @@ function SearchPageResultSec() {
     let [location_list, set_locationlist] = useState([])
     let getFilter_LocationList = async () => {
         try {
-            let response = await axios.get("http://localhost:2000/location_api");
+            let response = await axios.get("https://shamikachalse-zomatobackend.onrender.com/location_api");
             // console.log("result = ", response.data)
             set_locationlist(response.data)
         } catch (error) {

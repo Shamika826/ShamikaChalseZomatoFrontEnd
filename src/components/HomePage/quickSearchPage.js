@@ -15,7 +15,7 @@ function QuickSearchPage() {
 
     let getQuickSearch_MealTypes = async () => {
         try{
-            let response = await axios.get("http://localhost:2000/mealTypes_api")
+            let response = await axios.get("https://shamikachalse-zomatobackend.onrender.com/mealTypes_api")
     
             let mealTypedata = response.data
 

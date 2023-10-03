@@ -24,7 +24,7 @@ function WalpaperPage() {
         let value = event.target.value;
         if(value!==""){
             try {
-                let url = `http://localhost:2000/restaurant_api-by-locid/${value}`;
+                let url = `https://shamikachalse-zomatobackend.onrender.com/restaurant_api-by-locid/${value}`;
                 let response = await axios.get(url);
                 console.log(response.data.length)
                 if(response.data.length === 0){
@@ -42,7 +42,7 @@ function WalpaperPage() {
 
     let getQuickSearch_LocationList = async () => {
         try {
-            let response = await axios.get("http://localhost:2000/location_api");
+            let response = await axios.get("https://shamikachalse-zomatobackend.onrender.com/location_api");
             console.log("result = ", response.data)
             set_locationlist(response.data)
         } catch (error) {

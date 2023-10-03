@@ -50,7 +50,7 @@ function RestaurantPage() {
 
     let getRestaurantDetails = async () => {
         try {
-            let URL = "http://localhost:2000/restaurant_api-by-restaid/" + restaurant_id;
+            let URL = "https://shamikachalse-zomatobackend.onrender.com/restaurant_api-by-restaid/" + restaurant_id;
             let { data } = await axios.get(URL);
             // console.log(data)
             setRestau(data);
@@ -66,7 +66,7 @@ function RestaurantPage() {
 
     let getMealItems = async () => {
         try {
-            let URL = "http://localhost:2000/menuItems_By_restaurantID_api/" + restaurant_id;
+            let URL = "https://shamikachalse-zomatobackend.onrender.com/menuItems_By_restaurantID_api/" + restaurant_id;
             let { data } = await axios.get(URL);
             // console.log(data)
             // console.log(data[0].min_price)
@@ -128,7 +128,7 @@ function RestaurantPage() {
         var serverData = {
             amount : totalPrice
         }
-        var { data } = await axios.post("http://localhost:2000/razorPayOrderId",serverData)
+        var { data } = await axios.post("https://shamikachalse-zomatobackend.onrender.com/razorPayOrderId",serverData)
         console.log(data)
         // console.log(data.amount)
         // console.log(data.currency)
@@ -154,7 +154,7 @@ function RestaurantPage() {
                     console.log(response.razorpay_signature);
 
                     let { result } = await axios.post(
-                        "http://localhost:2000/verifyPayment",
+                        "https://shamikachalse-zomatobackend.onrender.com/verifyPayment",
                         sendData
                     )
                     console.log(result);
